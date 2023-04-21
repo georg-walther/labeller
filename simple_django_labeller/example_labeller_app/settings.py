@@ -16,7 +16,6 @@ from image_labelling_tool import labelling_tool
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = '3+p2$qln6o1ws1c)6o!+o+p%ql1n!+tt@wp)g5!pfgliqld)yo'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -73,7 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'example_labeller_app.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -83,7 +80,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -98,7 +94,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -108,7 +103,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 CSRF_COOKIE_SECURE = False
-
 
 #
 #
@@ -160,25 +154,28 @@ ANNO_CONTROLS = [
                                                       tooltip='Object is significantly obscured'),
     ], label_on_own_line=False, visibility_label_text='Filter by visibility'),
     labelling_tool.AnnoControlPopupMenu('material', 'Material', groups=[
-        labelling_tool.AnnoControlPopupMenu.group(label_text='Artifical/buildings', choices=[
-            labelling_tool.AnnoControlPopupMenu.choice(value='concrete', label_text='Concrete',
-                                                       tooltip='Concrete objects'),
-            labelling_tool.AnnoControlPopupMenu.choice(value='plastic', label_text='Plastic',
-                                                       tooltip='Plastic objects'),
-            labelling_tool.AnnoControlPopupMenu.choice(value='asphalt', label_text='Asphalt',
-                                                       tooltip='Road, pavement, etc.'),
+        labelling_tool.AnnoControlPopupMenu.group(label_text='Artificial', choices=[
+            labelling_tool.AnnoControlPopupMenu.choice(value='coil', label_text='Coil',
+                                                       tooltip='Coil'),
+            labelling_tool.AnnoControlPopupMenu.choice(value='stent', label_text='Stent',
+                                                       tooltip='Stent'),
+            labelling_tool.AnnoControlPopupMenu.choice(value='clip', label_text='Clip',
+                                                       tooltip='Clip'),
         ]),
-        labelling_tool.AnnoControlPopupMenu.group(label_text='Flat natural', choices=[
-            labelling_tool.AnnoControlPopupMenu.choice(value='grass', label_text='Grass',
-                                                       tooltip='Grass covered ground'),
-            labelling_tool.AnnoControlPopupMenu.choice(value='water', label_text='Water', tooltip='Water/lake')]),
-        labelling_tool.AnnoControlPopupMenu.group(label_text='Vegetation', choices=[
-            labelling_tool.AnnoControlPopupMenu.choice(value='trees', label_text='Trees', tooltip='Trees'),
-            labelling_tool.AnnoControlPopupMenu.choice(value='shrubbery', label_text='Shrubs',
-                                                       tooltip='Shrubs/bushes'),
-            labelling_tool.AnnoControlPopupMenu.choice(value='flowers', label_text='Flowers',
-                                                       tooltip='Flowers'),
-            labelling_tool.AnnoControlPopupMenu.choice(value='ivy', label_text='Ivy', tooltip='Ivy')]),
+        labelling_tool.AnnoControlPopupMenu.group(label_text='Natural', choices=[
+            labelling_tool.AnnoControlPopupMenu.choice(value='aneurysm', label_text='Aneurysm',
+                                                       tooltip='Aneurysm'),
+            labelling_tool.AnnoControlPopupMenu.choice(value='harbouring-vessel',
+                                                       label_text='Harbouring Vessel',
+                                                       tooltip='Harbouring Vessel'),
+            labelling_tool.AnnoControlPopupMenu.choice(value='thrombus', label_text='Thrombus',
+                                                       tooltip='Thrombus'),
+            labelling_tool.AnnoControlPopupMenu.choice(value='SAH', label_text='Subarachnoid Hemorrhage',
+                                                       tooltip='Subarachnoid Hemorrhage'),
+            labelling_tool.AnnoControlPopupMenu.choice(value='tumor', label_text='Tumor',
+                                                       tooltip='Tumor'),
+            labelling_tool.AnnoControlPopupMenu.choice(value='cerebral-anomaly', label_text='Cerebral Anomaly',
+                                                       tooltip='Cerebral Anomaly')]),
     ], visibility_label_text='Filter by material'),
     # labelling_tool.AnnoControlText('comment', 'Comment', multiline=False),
 ]
@@ -207,8 +204,8 @@ LABELLING_TOOL_CONFIG = {
         }
     },
     'settings': {
-        'brushWheelRate': 0.025,  # Change rate for brush radius (mouse wheel)
-        'brushKeyRate': 2.0,    # Change rate for brush radius (keyboard)
+        'brushWheelRate': 0.01,  # Change rate for brush radius (mouse wheel)
+        'brushKeyRate': 2.0,  # Change rate for brush radius (keyboard)
     }
 }
 
@@ -217,10 +214,8 @@ LABELLING_TOOL_DEXTR_AVAILABLE = False
 LABELLING_TOOL_DEXTR_POLLING_INTERVAL = 1000
 LABELLING_TOOL_DEXTR_WEIGHTS_PATH = None
 
-
 LABELLING_TOOL_EXTERNAL_LABEL_API = False
 LABELLING_TOOL_EXTERNAL_LABEL_API_URL = 'http://localhost:3000/get_labels'
-
 
 CELERY_BROKER_URL = 'amqp://guest@localhost//'
 CELERY_RESULT_BACKEND = 'rpc://'

@@ -29,7 +29,7 @@ import pathlib
 from image_labelling_tool_qt import controls, web_server
 
 
-class LabellerWindow (QtWidgets.QMainWindow):
+class LabellerWindow(QtWidgets.QMainWindow):
     def __init__(self, tool):
         super(LabellerWindow, self).__init__(None)
 
@@ -61,7 +61,8 @@ class LabellerWindow (QtWidgets.QMainWindow):
         self.setCentralWidget(self._view)
 
         # Switch tool action
-        switch_to_schema_editor = QtWidgets.QAction(self.style().standardIcon(QtWidgets.QStyle.SP_ArrowRight), 'Switch to schema editor', self)
+        switch_to_schema_editor = QtWidgets.QAction(self.style().standardIcon(QtWidgets.QStyle.SP_ArrowRight),
+                                                    'Switch to schema editor', self)
         switch_to_schema_editor.setStatusTip('Switch to schema editor')
         switch_to_schema_editor.triggered.connect(self.on_switch_to_schema_editor)
 
@@ -74,7 +75,7 @@ class LabellerWindow (QtWidgets.QMainWindow):
         self.tool.open_schema_editor()
 
 
-class SchemaEditorWindow (QtWidgets.QMainWindow):
+class SchemaEditorWindow(QtWidgets.QMainWindow):
     def __init__(self, tool):
         super(SchemaEditorWindow, self).__init__(None)
 
@@ -102,7 +103,8 @@ class SchemaEditorWindow (QtWidgets.QMainWindow):
         self.setCentralWidget(self._view)
 
         # Switch tool action
-        switch_to_labeller = QtWidgets.QAction(self.style().standardIcon(QtWidgets.QStyle.SP_ArrowRight), 'Switch to labeller', self)
+        switch_to_labeller = QtWidgets.QAction(self.style().standardIcon(QtWidgets.QStyle.SP_ArrowRight),
+                                               'Switch to labeller', self)
         switch_to_labeller.setStatusTip('Switch to labeller')
         switch_to_labeller.triggered.connect(self.on_switch_to_labeller)
 
@@ -224,26 +226,28 @@ def _labeller_window(app, images_dir: pathlib.Path, labels_dir: Optional[pathlib
                                                               tooltip='Object is significantly obscured'),
             ], label_on_own_line=False, visibility_label_text='Filter by visibility'),
             labelling_tool.AnnoControlPopupMenu('material', 'Material', groups=[
-                labelling_tool.AnnoControlPopupMenu.group(label_text='Artifical/buildings', choices=[
-                    labelling_tool.AnnoControlPopupMenu.choice(value='concrete', label_text='Concrete',
-                                                               tooltip='Concrete objects'),
-                    labelling_tool.AnnoControlPopupMenu.choice(value='plastic', label_text='Plastic',
-                                                               tooltip='Plastic objects'),
-                    labelling_tool.AnnoControlPopupMenu.choice(value='asphalt', label_text='Asphalt',
-                                                               tooltip='Road, pavement, etc.'),
+                labelling_tool.AnnoControlPopupMenu.group(label_text='Artificial', choices=[
+                    labelling_tool.AnnoControlPopupMenu.choice(value='coil', label_text='Coil',
+                                                               tooltip='Coil'),
+                    labelling_tool.AnnoControlPopupMenu.choice(value='stent', label_text='Stent',
+                                                               tooltip='Stent'),
+                    labelling_tool.AnnoControlPopupMenu.choice(value='clip', label_text='Clip',
+                                                               tooltip='Clip'),
                 ]),
-                labelling_tool.AnnoControlPopupMenu.group(label_text='Flat natural', choices=[
-                    labelling_tool.AnnoControlPopupMenu.choice(value='grass', label_text='Grass',
-                                                               tooltip='Grass covered ground'),
-                    labelling_tool.AnnoControlPopupMenu.choice(value='water', label_text='Water',
-                                                               tooltip='Water/lake')]),
-                labelling_tool.AnnoControlPopupMenu.group(label_text='Vegetation', choices=[
-                    labelling_tool.AnnoControlPopupMenu.choice(value='trees', label_text='Trees', tooltip='Trees'),
-                    labelling_tool.AnnoControlPopupMenu.choice(value='shrubbery', label_text='Shrubs',
-                                                               tooltip='Shrubs/bushes'),
-                    labelling_tool.AnnoControlPopupMenu.choice(value='flowers', label_text='Flowers',
-                                                               tooltip='Flowers'),
-                    labelling_tool.AnnoControlPopupMenu.choice(value='ivy', label_text='Ivy', tooltip='Ivy')]),
+                labelling_tool.AnnoControlPopupMenu.group(label_text='Natural', choices=[
+                    labelling_tool.AnnoControlPopupMenu.choice(value='aneurysm', label_text='Aneurysm',
+                                                               tooltip='Aneurysm'),
+                    labelling_tool.AnnoControlPopupMenu.choice(value='harbouring-vessel',
+                                                               label_text='Harbouring Vessel',
+                                                               tooltip='Harbouring Vessel'),
+                    labelling_tool.AnnoControlPopupMenu.choice(value='thrombus', label_text='Thrombus',
+                                                               tooltip='Thrombus'),
+                    labelling_tool.AnnoControlPopupMenu.choice(value='SAH', label_text='Subarachnoid Hemorrhage',
+                                                               tooltip='Subarachnoid Hemorrhage'),
+                    labelling_tool.AnnoControlPopupMenu.choice(value='tumor', label_text='Tumor',
+                                                               tooltip='Tumor'),
+                    labelling_tool.AnnoControlPopupMenu.choice(value='cerebral-anomaly', label_text='Cerebral Anomaly',
+                                                               tooltip='Cerebral Anomaly')]),
             ], visibility_label_text='Filter by material'),
             # labelling_tool.AnnoControlText('comment', 'Comment', multiline=False),
         ]
@@ -266,8 +270,8 @@ def _labeller_window(app, images_dir: pathlib.Path, labels_dir: Optional[pathlib
         ]
 
         tool = Tool(server=server, labelled_images=labelled_images, schema_store=schema_store,
-            tasks=tasks, anno_controls=anno_controls, config=config, dextr_fn=dextr_fn,
-            enable_firebug=enable_firebug, use_http_memory_cache=use_http_memory_cache)
+                    tasks=tasks, anno_controls=anno_controls, config=config, dextr_fn=dextr_fn,
+                    enable_firebug=enable_firebug, use_http_memory_cache=use_http_memory_cache)
 
         # Show the window and run the app
         tool.open_labeller()
@@ -306,8 +310,9 @@ def run_app(dextr_weights, enable_firebug, use_http_memory_cache):
     schema_path = [None]
 
     # Images directory
-    content_layout.addWidget(QtWidgets.QLabel('Please choose the directory containing the images that you wish to label:'),
-                             0, 0, 1, 2)
+    content_layout.addWidget(
+        QtWidgets.QLabel('Please choose the directory containing the images that you wish to label:'),
+        0, 0, 1, 2)
     images_dir_button = QtWidgets.QPushButton('Choose images directory')
     images_dir_button.setIcon(init_dialog.style().standardIcon(QtWidgets.QStyle.SP_DirOpenIcon))
     images_dir_label = QtWidgets.QLabel(images_dir[0])
@@ -344,8 +349,9 @@ def run_app(dextr_weights, enable_firebug, use_http_memory_cache):
     content_layout.addWidget(labels_dir_label, 3, 1)
 
     # Schema path
-    content_layout.addWidget(QtWidgets.QLabel('If the schema is not stored in the file schema.json alongside the labels, please choose its location:'),
-                             4, 0, 1, 2)
+    content_layout.addWidget(QtWidgets.QLabel(
+        'If the schema is not stored in the file schema.json alongside the labels, please choose its location:'),
+        4, 0, 1, 2)
     schema_path_button = QtWidgets.QPushButton('[Optional] Choose labels directory')
     schema_path_button.setIcon(init_dialog.style().standardIcon(QtWidgets.QStyle.SP_DirOpenIcon))
     schema_path_label = QtWidgets.QLabel('')
@@ -369,7 +375,6 @@ def run_app(dextr_weights, enable_firebug, use_http_memory_cache):
     # DEXTR checkbox
     dextr_check = QtWidgets.QCheckBox('Enable DEXTR')
     content_layout.addWidget(dextr_check, 6, 1)
-
 
     # Buttons section
     buttons_section = QtWidgets.QFrame()
