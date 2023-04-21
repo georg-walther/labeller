@@ -7,7 +7,6 @@ from django.db.models import Avg, Max, Min, Sum
 from django.db import transaction
 from image_labelling_tool import models
 
-
 _DEMO_LABEL_SCHEMA = {
     'colour_schemes': [
         {'name': 'natural', 'human_name': 'Natural'},
@@ -15,22 +14,30 @@ _DEMO_LABEL_SCHEMA = {
     ],
     'label_class_groups': [
         {'group_name': 'Natural', 'group_classes': [
-            {'name': 'tree', 'human_name': 'Trees', 'colours': dict(default=[0, 255, 192], natural=[0, 255, 192],
-                                                                    artificial=[128, 128, 128])},
-            {'name': 'lake', 'human_name': 'Lake', 'colours': dict(default=[0, 128, 255], natural=[0, 128, 255],
-                                                                   artificial=[128, 128, 128])},
-            {'name': 'flower', 'human_name': 'Flower', 'colours': dict(default=[255, 96, 192], natural=[255, 192, 96],
-                                                                       artificial=[128, 128, 128])},
-            {'name': 'leaf', 'human_name': 'Leaf', 'colours': dict(default=[65, 255, 0], natural=[65, 255, 0],
-                                                                   artificial=[128, 128, 128])},
-            {'name': 'stem', 'human_name': 'Stem', 'colours': dict(default=[128, 64, 0], natural=[128, 64, 0],
-                                                                   artificial=[128, 128, 128])},
+            {'name': 'aneurysm', 'human_name': 'Aneurysm', 'colours': dict(default=[0, 255, 192], natural=[0, 255, 192],
+                                                                           artificial=[128, 128, 128])},
+            {'name': 'harbouring-vessel', 'human_name': 'Harbouring Vessel',
+             'colours': dict(default=[0, 128, 255], natural=[0, 128, 255],
+                             artificial=[128, 128, 128])},
+            {'name': 'thrombus', 'human_name': 'Thrombus',
+             'colours': dict(default=[255, 96, 192], natural=[255, 192, 96],
+                             artificial=[128, 128, 128])},
+            {'name': 'SAH', 'human_name': 'Subarachnoid Hemorrhage',
+             'colours': dict(default=[65, 255, 0], natural=[65, 255, 0],
+                             artificial=[128, 128, 128])},
+            {'name': 'tumor', 'human_name': 'Tumor', 'colours': dict(default=[128, 64, 0], natural=[128, 64, 0],
+                                                                     artificial=[128, 128, 128])},
+            {'name': 'cerebral-anomaly', 'human_name': 'Cerebral Anomaly',
+             'colours': dict(default=[128, 0, 64], natural=[128, 0, 64],
+                             artificial=[128, 128, 128])},
         ]},
         {'group_name': 'Artificial', 'group_classes': [
-            {'name': 'building', 'human_name': 'Buildings', 'colours': dict(default=[255, 128, 0], natural=[128, 128, 128],
-                                                                            artificial=[255, 128, 0])},
-            {'name': 'wall', 'human_name': 'Wall', 'colours': dict(default=[0, 128, 255], natural=[128, 128, 128],
-                                                                   artificial=[0, 128, 255])},
+            {'name': 'coil', 'human_name': 'Coil', 'colours': dict(default=[255, 128, 0], natural=[128, 128, 128],
+                                                                   artificial=[255, 128, 0])},
+            {'name': 'stent', 'human_name': 'Stent', 'colours': dict(default=[0, 128, 255], natural=[128, 128, 128],
+                                                                     artificial=[0, 128, 255])},
+            {'name': 'clip', 'human_name': 'Clip', 'colours': dict(default=[255, 0, 128], natural=[128, 128, 128],
+                                                                   artificial=[255, 0, 128])},
         ]},
     ]
 }
@@ -72,17 +79,23 @@ class Command(BaseCommand):
                 for model in models.LabellingColourScheme.objects.filter(schema=schema_model):
                     model.delete()
 
-            col_scheme_order_index = models.LabellingColourScheme.objects.filter(schema=schema_model).aggregate(Max('order_index'))['order_index__max']
+            col_scheme_order_index = \
+                models.LabellingColourScheme.objects.filter(schema=schema_model).aggregate(Max('order_index'))[
+                    'order_index__max']
             if col_scheme_order_index is None:
                 col_scheme_order_index = 0
             else:
                 col_scheme_order_index += 1
-            group_order_index = models.LabelClassGroup.objects.filter(schema=schema_model).aggregate(Max('order_index'))['order_index__max']
+            group_order_index = \
+                models.LabelClassGroup.objects.filter(schema=schema_model).aggregate(Max('order_index'))[
+                    'order_index__max']
             if group_order_index is None:
                 group_order_index = 0
             else:
                 group_order_index += 1
-            lab_order_index = models.LabelClass.objects.filter(group__schema=schema_model).aggregate(Max('order_index'))['order_index__max']
+            lab_order_index = \
+                models.LabelClass.objects.filter(group__schema=schema_model).aggregate(Max('order_index'))[
+                    'order_index__max']
             if lab_order_index is None:
                 lab_order_index = 0
             else:
@@ -157,4 +170,3 @@ class Command(BaseCommand):
                                     label_class=lab_model, scheme=name_to_colour_scheme[key],
                                     colour=models.LabelClass.list_to_html_colour(value))
                             cls_col_model.save()
-

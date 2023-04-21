@@ -42,7 +42,6 @@ except ImportError:
     SocketIO = None
     socketio_emit = None
 
-
 DextrImageType = Union[np.ndarray, Image.Image]
 DextrFunctionType = Callable[[DextrImageType, np.ndarray], np.ndarray]
 
@@ -67,7 +66,6 @@ def _register_labeller_routes(app: Flask, socketio: Any, socketio_emit: Any,
         else:
             return []
 
-
     if socketio is not None:
         @socketio.on('get_labels')
         def handle_get_labels(arg_js: Mapping[str, Any]):
@@ -87,7 +85,6 @@ def _register_labeller_routes(app: Flask, socketio: Any, socketio_emit: Any,
 
             socketio_emit('get_labels_reply', label_header)
 
-
         @socketio.on('set_labels')
         def handle_set_labels(arg_js: Mapping[str, Any]):
             label_header = arg_js['label_header']
@@ -102,7 +99,6 @@ def _register_labeller_routes(app: Flask, socketio: Any, socketio_emit: Any,
             image.labels_store.update_wrapped_labels(wrapped_labels)
 
             socketio_emit('set_labels_reply', '')
-
 
         @socketio.on('dextr')
         def handle_dextr(dextr_js: Mapping[str, Any]):
@@ -147,7 +143,6 @@ def _register_labeller_routes(app: Flask, socketio: Any, socketio_emit: Any,
             r.mimetype = 'application/json'
             return r
 
-
         @app.route('/labeller/set_labels', methods=['POST'])
         def set_labels():
             label_header = json.loads(request.form['labels'])
@@ -161,7 +156,6 @@ def _register_labeller_routes(app: Flask, socketio: Any, socketio_emit: Any,
             image.labels_store.update_wrapped_labels(wrapped_labels)
 
             return make_response('')
-
 
         @app.route('/labeller/dextr', methods=['POST'])
         def dextr():
@@ -184,7 +178,6 @@ def _register_labeller_routes(app: Flask, socketio: Any, socketio_emit: Any,
                 return make_response(json.dumps(dextr_reply))
             else:
                 return make_response(json.dumps({'error': 'unknown_command'}))
-
 
     @app.route('/image/<image_id>')
     def get_image(image_id: str):
@@ -250,9 +243,9 @@ def flask_labeller(labelled_images: Sequence[labelled_image.LabelledImage],
                    dextr_fn: Optional[DextrFunctionType] = None, use_reloader: bool = True, debug: bool = True,
                    port: Optional[int] = None):
     # Generate image IDs list
-    image_ids = [str(i)   for i in range(len(labelled_images))]
+    image_ids = [str(i) for i in range(len(labelled_images))]
     # Generate images table mapping image ID to image so we can get an image by ID
-    images_table = {image_id: img   for image_id, img in zip(image_ids, labelled_images)}
+    images_table = {image_id: img for image_id, img in zip(image_ids, labelled_images)}
     # Generate image descriptors list to hand over to the labelling tool
     # Each descriptor provides the image ID, the URL and the size
     image_descriptors = []
@@ -317,9 +310,9 @@ def flask_labeller_and_schema_editor(labelled_images: Sequence[labelled_image.La
     vue_tmpl_path = pathlib.Path(__file__).parent / 'templates' / 'inline' / 'schema_editor_vue_templates.html'
 
     # Generate image IDs list
-    image_ids = [str(i)   for i in range(len(labelled_images))]
+    image_ids = [str(i) for i in range(len(labelled_images))]
     # Generate images table mapping image ID to image so we can get an image by ID
-    images_table = {image_id: img   for image_id, img in zip(image_ids, labelled_images)}
+    images_table = {image_id: img for image_id, img in zip(image_ids, labelled_images)}
     # Generate image descriptors list to hand over to the labelling tool
     # Each descriptor provides the image ID, the URL and the size
     image_descriptors = []
@@ -332,7 +325,6 @@ def flask_labeller_and_schema_editor(labelled_images: Sequence[labelled_image.La
             width=width, height=height
         ))
 
-
     app = Flask(__name__, static_folder='static')
     if SocketIO is not None:
         print('Using web sockets')
@@ -340,17 +332,14 @@ def flask_labeller_and_schema_editor(labelled_images: Sequence[labelled_image.La
     else:
         socketio = None
 
-
     if config is None:
         config = labelling_tool.DEFAULT_CONFIG
-
 
     @app.route('/')
     def index():
         return render_template('index.jinja2',
                                num_images=len(image_descriptors),
                                )
-
 
     @app.route('/labeller')
     def labeller():
@@ -380,12 +369,10 @@ def flask_labeller_and_schema_editor(labelled_images: Sequence[labelled_image.La
     _register_labeller_routes(app, socketio, socketio_emit, images_table, dextr_fn)
     _register_schema_editor_routes(app, socketio, socketio_emit, schema_store)
 
-
     if socketio is not None:
         socketio.run(app, debug=debug, port=port, use_reloader=use_reloader)
     else:
         app.run(debug=debug, port=port, use_reloader=use_reloader)
-
 
 
 @click.command()
@@ -463,25 +450,26 @@ def run_app(images_dir, images_pat, labels_dir, readonly, update_label_object_id
                                                           tooltip='Object is significantly obscured'),
         ], label_on_own_line=False, visibility_label_text='Filter by visibility'),
         labelling_tool.AnnoControlPopupMenu('material', 'Material', groups=[
-            labelling_tool.AnnoControlPopupMenu.group(label_text='Artifical/buildings', choices=[
-                labelling_tool.AnnoControlPopupMenu.choice(value='concrete', label_text='Concrete',
-                                                           tooltip='Concrete objects'),
-                labelling_tool.AnnoControlPopupMenu.choice(value='plastic', label_text='Plastic',
-                                                           tooltip='Plastic objects'),
-                labelling_tool.AnnoControlPopupMenu.choice(value='asphalt', label_text='Asphalt',
-                                                           tooltip='Road, pavement, etc.'),
+            labelling_tool.AnnoControlPopupMenu.group(label_text='Artificial', choices=[
+                labelling_tool.AnnoControlPopupMenu.choice(value='coil', label_text='Coil',
+                                                           tooltip='Coil'),
+                labelling_tool.AnnoControlPopupMenu.choice(value='stent', label_text='Stent',
+                                                           tooltip='Stent'),
+                labelling_tool.AnnoControlPopupMenu.choice(value='clip', label_text='Clip',
+                                                           tooltip='Clip'),
             ]),
-            labelling_tool.AnnoControlPopupMenu.group(label_text='Flat natural', choices=[
-                labelling_tool.AnnoControlPopupMenu.choice(value='grass', label_text='Grass',
-                                                           tooltip='Grass covered ground'),
-                labelling_tool.AnnoControlPopupMenu.choice(value='water', label_text='Water', tooltip='Water/lake')]),
-            labelling_tool.AnnoControlPopupMenu.group(label_text='Vegetation', choices=[
-                labelling_tool.AnnoControlPopupMenu.choice(value='trees', label_text='Trees', tooltip='Trees'),
-                labelling_tool.AnnoControlPopupMenu.choice(value='shrubbery', label_text='Shrubs',
-                                                           tooltip='Shrubs/bushes'),
-                labelling_tool.AnnoControlPopupMenu.choice(value='flowers', label_text='Flowers',
-                                                           tooltip='Flowers'),
-                labelling_tool.AnnoControlPopupMenu.choice(value='ivy', label_text='Ivy', tooltip='Ivy')]),
+            labelling_tool.AnnoControlPopupMenu.group(label_text='Natural', choices=[
+                labelling_tool.AnnoControlPopupMenu.choice(value='aneurysm', label_text='Aneurysm',
+                                                           tooltip='Aneurysm'),
+                labelling_tool.AnnoControlPopupMenu.choice(value='harbouring-vessel', label_text='Harbouring Vessel',
+                                                           tooltip='Harbouring Vessel'),
+                labelling_tool.AnnoControlPopupMenu.choice(value='thrombus', label_text='Thrombus', tooltip='Thrombus'),
+                labelling_tool.AnnoControlPopupMenu.choice(value='SAH', label_text='Subarachnoid Hemorrhage',
+                                                           tooltip='Subarachnoid Hemorrhage'),
+                labelling_tool.AnnoControlPopupMenu.choice(value='tumor', label_text='Tumor',
+                                                           tooltip='Tumor'),
+                labelling_tool.AnnoControlPopupMenu.choice(value='cerebral-anomaly', label_text='Cerebral Anomaly',
+                                                           tooltip='Cerebral Anomaly')]),
         ], visibility_label_text='Filter by material'),
         # labelling_tool.AnnoControlText('comment', 'Comment', multiline=False),
     ]
@@ -517,7 +505,7 @@ def run_app(images_dir, images_pat, labels_dir, readonly, update_label_object_id
     ]
 
     flask_labeller_and_schema_editor(labelled_images, schema_store, tasks=tasks,
-                   anno_controls=anno_controls, config=config, dextr_fn=dextr_fn)
+                                     anno_controls=anno_controls, config=config, dextr_fn=dextr_fn)
 
 
 if __name__ == '__main__':

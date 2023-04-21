@@ -444,6 +444,13 @@ module labelling_tool {
                     event.preventDefault();
                 });
 
+                document.addEventListener("keydown", (event) => {
+                    if (event.key == "ArrowLeft") {
+                        _increment_image_index(-1);
+                        event.preventDefault();
+                    }
+                });
+
                 var next_image_button: any = $('#btn_next_image');
                 next_image_button.button({
                     text: false,
@@ -453,6 +460,13 @@ module labelling_tool {
                     event.preventDefault();
                 });
 
+                document.addEventListener("keydown", (event) => {
+                    if (event.key == "ArrowRight") {
+                        _increment_image_index(1);
+                        event.preventDefault();
+                    }
+                });
+                
                 if (this._getUnlockedImageIDCallback !== null && this._getUnlockedImageIDCallback !== undefined) {
                     var next_unlocked_image_button: any = $('#btn_next_unlocked_image');
                     next_unlocked_image_button.click(function (event: any) {

@@ -504,7 +504,7 @@ class LabelledImage:
 
         image_paths = []
         for pat in image_filename_patterns:
-            image_paths.extend(list(images_dir.glob(pat)))
+            image_paths.extend(list(images_dir.rglob(pat)))
         return cls.for_image_files(image_paths, with_labels_only=with_labels_only, labels_dir=labels_dir,
                                    readonly=readonly, delete_if_blank=delete_if_blank, label_suffix=label_suffix,
                                    image_loader=image_loader, store_locally=store_locally)
